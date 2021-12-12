@@ -1,21 +1,21 @@
 const { v4: uuidv4 } = require('uuid');
-const User = require('./user.model');
+const Column = require('./column.model');
 
 const data = [];
 
 const getAll = async () => data;
 
-const get = async (id) => data.find((user) => user.id === id) || false;
+const get = async (id) => data.find((column) => column.id === id) || false;
 
-const create = async (name, login, password) => {
-  const user = new User({ id: uuidv4(), name, login, password });
-  data.push(user);
+const create = async (title, order) => {
+  const column = new Column({ id: uuidv4(), title, order });
+  data.push(column);
 
-  return user;
+  return column;
 }
 
 const update = async (id, fields) => {
-  const index = data.findIndex((user) => user.id === id);
+  const index = data.findIndex((column) => column.id === id);
 
   if (index === -1) return false;
 
@@ -28,7 +28,7 @@ const update = async (id, fields) => {
 }
 
 const remove = async (id) => {
-  const index = data.findIndex((user) => user.id === id);
+  const index = data.findIndex((column) => column.id === id);
 
   if (index !== -1) {
     return data.splice(index, 1)[0];
