@@ -36,7 +36,7 @@ export class UserModel {
    *
    * @return serialized User
    */
-  static toResponse(user: IUserData) {
+  static toResponse(user: IUserData): Partial<IUserData> {
     const { id, name, login } = user;
     return { id, name, login };
   }

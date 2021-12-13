@@ -6,9 +6,9 @@ const data: Array<IUserData> = [];
 /**
  * @description Get Users list
  *
- * @return Promise Array of boards;
+ * @return Promise Array of users;
  */
-export const getAll = async () => data;
+export const getAll = async (): Promise<Array<IUserData>> => data;
 /**
  * @description Get User by id
  *
@@ -16,7 +16,7 @@ export const getAll = async () => data;
  *
  * @return Promise User | false;
  */
-export const get = async (id: string) => data.find((user) => user.id === id) || false;
+export const get = async (id: string): Promise<IUserData | false> => data.find((user) => user.id === id) || false;
 /**
  * @description Create User
  *
@@ -26,7 +26,7 @@ export const get = async (id: string) => data.find((user) => user.id === id) || 
  *
  * @return Promise new User
  */
-export const create = async (name: string, login: string, password: string) => {
+export const create = async (name: string, login: string, password: string): Promise<IUserData> => {
   const user = new UserModel({ id: uuidv4(), name, login, password });
   data.push(user);
 
@@ -40,7 +40,7 @@ export const create = async (name: string, login: string, password: string) => {
  *
  * @return Promise updated User | false
  */
-export const update = async (id: string, fields: IUserData) => {
+export const update = async (id: string, fields: IUserData): Promise<IUserData | false> => {
   const index = data.findIndex((user) => user.id === id);
 
   if (index === -1) return false;
@@ -58,7 +58,7 @@ export const update = async (id: string, fields: IUserData) => {
  *
  * @return Promise Boolean result
  */
-export const remove = async (id: string) => {
+export const remove = async (id: string): Promise<IUserData | false> => {
   const index = data.findIndex((user) => user.id === id);
 
   if (index !== -1) {

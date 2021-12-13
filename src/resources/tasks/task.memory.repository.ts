@@ -44,7 +44,7 @@ export const create = async (title: string, order: string, description: string, 
  *
  * @return Promise updated Task | false
  */
-export const update = async (id: string | undefined, fields: ITaskData) => {
+export const update = async (id: string | undefined, fields: ITaskData): Promise<ITaskData|false> => {
   const index = data.findIndex((task) => task.id === id);
 
   if (index === -1) return false;
@@ -64,7 +64,7 @@ export const update = async (id: string | undefined, fields: ITaskData) => {
  *
  * @return Promise updated Tasks list | empty array
  */
-export const updateBatch = async (conditions: ITaskData, fields: ITaskData) => {
+export const updateBatch = async (conditions: ITaskData, fields: ITaskData): Promise<Array<ITaskData>> => {
   const tasks = data.filter((task) => compareConditions(task, conditions));
 
   const promises: Array<Promise<ITaskData|false>> = [];
@@ -85,7 +85,7 @@ export const updateBatch = async (conditions: ITaskData, fields: ITaskData) => {
  *
  * @return Promise Boolean result
  */
-export const remove = async (value: string | undefined, column: keyof ITaskData = 'id') => {
+export const remove = async (value: string | undefined, column: keyof ITaskData = 'id'): Promise<ITaskData|false> => {
   const index = data.findIndex((task) => task[column] === value);
 
   if (index !== -1) {
@@ -100,7 +100,7 @@ export const remove = async (value: string | undefined, column: keyof ITaskData 
  *
  * @return Promise Boolean result
  */
-export const removeBatch = async (conditions: ITaskData) => {
+export const removeBatch = async (conditions: ITaskData): Promise<Array<ITaskData|false>> => {
   const tasks = data.filter((task) => compareConditions(task, conditions));
 
   const promises: Array<Promise<ITaskData|false>> = [];

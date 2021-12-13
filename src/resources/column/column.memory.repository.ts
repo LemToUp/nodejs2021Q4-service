@@ -8,7 +8,7 @@ const data: Array<IColumnData> = [];
  *
  * @return Promise Array of Columns;
  */
-export const getAll = async () => data;
+export const getAll = async (): Promise<Array<IColumnData>> => data;
 /**
  * @description Get Column by id
  *
@@ -16,7 +16,7 @@ export const getAll = async () => data;
  *
  * @return Promise Column | false;
  */
-export const get = async (id: string) => data.find((column) => column.id === id) || false;
+export const get = async (id: string): Promise<IColumnData|false> => data.find((column) => column.id === id) || false;
 /**
  * @description Create Column
  *
@@ -25,7 +25,7 @@ export const get = async (id: string) => data.find((column) => column.id === id)
  *
  * @return Promise new Column
  */
-export const create = async (title: string, order: string) => {
+export const create = async (title: string, order: string): Promise<IColumnData> => {
   const column = new ColumnModel({ id: uuidv4(), title, order });
   data.push(column);
 
@@ -39,7 +39,7 @@ export const create = async (title: string, order: string) => {
  *
  * @return Promise updated Column | false
  */
-export const update = async (id: string, fields: IColumnData) => {
+export const update = async (id: string, fields: IColumnData): Promise<IColumnData|false> => {
   const index = data.findIndex((column) => column.id === id);
 
   if (index === -1) return false;
@@ -57,7 +57,7 @@ export const update = async (id: string, fields: IColumnData) => {
  *
  * @return Promise Boolean result
  */
-export const remove = async (id: string) => {
+export const remove = async (id: string): Promise<IColumnData|false> => {
   const index = data.findIndex((column) => column.id === id);
 
   if (index !== -1) {

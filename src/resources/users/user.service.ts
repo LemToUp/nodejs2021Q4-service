@@ -1,20 +1,21 @@
 import * as usersRepo from './user.memory.repository';
 import * as tasksRepo from '../tasks/task.memory.repository';
+import {IUserData} from "./user.model";
 
 /**
  * @description Get all Users
  *
- * @return list of the Users
+ * @return Promise list of the Users
  */
-export const getAll = () => usersRepo.getAll();
+export const getAll = (): Promise<Array<IUserData>> => usersRepo.getAll();
 /**
  * @description Get User by id
  *
  * @param id string
  *
- * @return User | false
+ * @return Promise User | false
  */
-export const get = (id: string) => usersRepo.get(id);
+export const get = (id: string): Promise<IUserData|false> => usersRepo.get(id);
 /**
  * @description Create User
  *
@@ -22,9 +23,9 @@ export const get = (id: string) => usersRepo.get(id);
  * @param login string
  * @param pass string
  *
- * @return created User | false
+ * @return Promise created User | false
  */
-export const create = (name: string, login: string, pass: string) => usersRepo.create(name, login, pass);
+export const create = (name: string, login: string, pass: string): Promise<IUserData> => usersRepo.create(name, login, pass);
 /**
  * @description Update User
  * @param id string
@@ -32,9 +33,9 @@ export const create = (name: string, login: string, pass: string) => usersRepo.c
  * @param login string|undefined
  * @param pass string|undefined
  *
- * @return updatedUser | false
+ * @return Promise updatedUser | false
  */
-export const update = (id: string, name: string|undefined = undefined, login: string|undefined = undefined, pass: string|undefined = undefined) => usersRepo.update(id, {
+export const update = (id: string, name: string|undefined = undefined, login: string|undefined = undefined, pass: string|undefined = undefined): Promise<IUserData|false> => usersRepo.update(id, {
     ...(name ? { name } : {}),
     ...(login ? { login } : {}),
     ...(pass ? { pass } : {}),
@@ -44,9 +45,9 @@ export const update = (id: string, name: string|undefined = undefined, login: st
  *
  * @param id string
  *
- * @return result bool
+ * @return Promise deleted User | bool
  */
-export const remove = async (id: string) => {
+export const remove = async (id: string): Promise<IUserData|false> => {
     const result = await usersRepo.remove(id);
 
     if (result) {

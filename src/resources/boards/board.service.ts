@@ -4,7 +4,7 @@ import * as tasksRepo from '../tasks/task.memory.repository';
 /**
  * @description Get all Boards
  *
- * @return list of the Boards
+ * @return Promise list of the Boards
  */
 export const getAll = () => boardsRepo.getAll();
 /**
@@ -12,7 +12,7 @@ export const getAll = () => boardsRepo.getAll();
  *
  * @param id string
  *
- * @return Board | false
+ * @return Promise Board | false
  */
 export const get = (id: string) => boardsRepo.get(id);
 /**
@@ -21,7 +21,7 @@ export const get = (id: string) => boardsRepo.get(id);
  * @param title string
  * @param columns string
  *
- * @return created Board | false
+ * @return Promise created Board | false
  */
 export const create = (title: string, columns: string) => boardsRepo.create(title, columns);
 /**
@@ -30,7 +30,7 @@ export const create = (title: string, columns: string) => boardsRepo.create(titl
  * @param title string|undefined
  * @param columns string|undefined
  *
- * @return updatedBoard | false
+ * @return Promise updatedBoard | false
  */
 export const update = (id: string, title: string | undefined = undefined, columns: string | undefined = undefined) => boardsRepo.update(id, {
     ...(title ? { title } : {}),
@@ -41,7 +41,7 @@ export const update = (id: string, title: string | undefined = undefined, column
  *
  * @param id string
  *
- * @return result bool
+ * @return Promise Board | false
  */
 export const remove = async (id: string) => {
     const result = await boardsRepo.remove(id);

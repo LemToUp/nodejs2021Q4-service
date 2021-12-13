@@ -8,7 +8,7 @@ const data: Array<IBoardData> = [];
  *
  * @return Promise Array of boards;
  */
-export const getAll = async () => data;
+export const getAll = async (): Promise<Array<IBoardData>> => data;
 /**
  * @description Get Board by id
  *
@@ -16,7 +16,7 @@ export const getAll = async () => data;
  *
  * @return Promise Board | false;
  */
-export const get = async (id: string) => data.find((board) => board.id === id) || false;
+export const get = async (id: string): Promise<IBoardData|false> => data.find((board) => board.id === id) || false;
 /**
  * @description Create Board
  *
@@ -25,7 +25,7 @@ export const get = async (id: string) => data.find((board) => board.id === id) |
  *
  * @return Promise new Board
  */
-export const create = async (title: string, columns: string) => {
+export const create = async (title: string, columns: string): Promise<IBoardData> => {
   const board = new BoardModel({ id: uuidv4(), title, columns });
   data.push(board);
 
@@ -39,7 +39,7 @@ export const create = async (title: string, columns: string) => {
  *
  * @return Promise updated Board | false
  */
-export const update = async (id: string, fields: IBoardData) => {
+export const update = async (id: string, fields: IBoardData): Promise<IBoardData|false> => {
   const index = data.findIndex((board) => board.id === id);
 
   if (index === -1) return false;
@@ -57,7 +57,7 @@ export const update = async (id: string, fields: IBoardData) => {
  *
  * @return Promise Boolean result
  */
-export const remove = async (id: string) => {
+export const remove = async (id: string): Promise<IBoardData|false> => {
   const index = data.findIndex((board) => board.id === id);
 
   if (index !== -1) {

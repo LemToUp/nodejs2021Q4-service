@@ -1,20 +1,21 @@
 import * as tasksRepo from './task.memory.repository';
+import {ITaskData} from "./task.model";
 /**
  * @description Get Task by BoardId
  *
  * @param boardId string
  *
- * @return Task | false
+ * @return Promise Task | false
  */
-export const getByBoardId = (boardId: string) => tasksRepo.getByBoardId(boardId);
+export const getByBoardId = (boardId: string): Promise<Array<ITaskData>> => tasksRepo.getByBoardId(boardId);
 /**
  * @description Get Task by id
  *
  * @param id string
  *
- * @return Task | false
+ * @return Promise Task | false
  */
-export const get = (id: string) => tasksRepo.get(id);
+export const get = (id: string): Promise<ITaskData|false> => tasksRepo.get(id);
 /**
  * @description Create Task
  *
@@ -25,9 +26,9 @@ export const get = (id: string) => tasksRepo.get(id);
  * @param boardId string
  * @param columnId string
  *
- * @return created Task | false
+ * @return Promise created Task | false
  */
-export const create = (title: string, order: string, description: string, userId: string, boardId: string, columnId: string) => tasksRepo.create(title, order, description, userId, boardId, columnId);
+export const create = (title: string, order: string, description: string, userId: string, boardId: string, columnId: string): Promise<ITaskData> => tasksRepo.create(title, order, description, userId, boardId, columnId);
 /**
  * @description Update Task
  * @param id string
@@ -38,7 +39,7 @@ export const create = (title: string, order: string, description: string, userId
  * @param boardId string|undefined
  * @param columnId string|undefined
  *
- * @return updatedTask | false
+ * @return Promise updatedTask | false
  */
 export const updateById = (
     id: string,
@@ -48,7 +49,7 @@ export const updateById = (
     userId: string | null = null,
     boardId: string | null = null,
     columnId: string | null = null
-) => tasksRepo.update(id, {
+): Promise<ITaskData|false> => tasksRepo.update(id, {
     ...(title ? { title } : {}),
     ...(order ? { order } : {}),
     ...(description ? { description } : {}),
@@ -61,6 +62,6 @@ export const updateById = (
  *
  * @param id string
  *
- * @return result bool
+ * @return Promise deleted Task | false
  */
-export const remove = (id: string) => tasksRepo.remove(id);
+export const remove = (id: string): Promise<ITaskData|false> => tasksRepo.remove(id);

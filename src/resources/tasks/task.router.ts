@@ -13,20 +13,32 @@ import * as tasksService from './task.service';
  * @remarks DELETE /:taskId - delete
  */
 export const taskRoute:FastifyPluginAsync = async (fastify) => {
+  /**
+   * @description Get Tasks list
+   * @param req FastifyRequest
+   * @param res FastifyReply
+   *
+   * @return Response array of TaskModels
+   */
   fastify.get('/', {
     schema: {
       querystring: {
         boardId: { type: 'string' },
       }
     }
-
   }, async (req, res) => {
     const { boardId } = req.params as { boardId: string };
     const tasks = await tasksService.getByBoardId(boardId);
     // map task fields to exclude secret fields like "password"
     return response(res, tasks.map(TaskModel.toResponse));
   })
-
+  /**
+   * @description Get Task by Id
+   * @param req FastifyRequest
+   * @param res FastifyReply
+   *
+   * @return Response TaskModel | 404
+   */
   fastify.get('/:taskId', {
     schema: {
       querystring: {
@@ -39,7 +51,13 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
     // map task fields to exclude secret fields like "password"
     return task ? response(res, TaskModel.toResponse(task)) : response(res,'Task not found', 404);
   })
-
+  /**
+   * @description Create Task
+   * @param req FastifyRequest
+   * @param res FastifyReply
+   *
+   * @return Response created TaskModel
+   */
   fastify.post('/', {
     schema: {
       querystring: {
@@ -53,7 +71,13 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
 
     return response(res, TaskModel.toResponse(task), 201);
   })
-
+  /**
+   * @description Update Task by id
+   * @param req FastifyRequest
+   * @param res FastifyReply
+   *
+   * @return Response updated TaskModel
+   */
   fastify.put('/:taskId', {
     schema: {
       querystring: {
@@ -68,7 +92,13 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
 
     return response(res, task ? TaskModel.toResponse(task) : 'Not found', task ? 200 : 404);
   })
-
+  /**
+   * @description Delete Task by id
+   * @param req FastifyRequest
+   * @param res FastifyReply
+   *
+   * @return Response deleted TaskModel
+   */
   fastify.delete('/:taskId', {
     schema: {
       querystring: {

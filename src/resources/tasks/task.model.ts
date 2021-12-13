@@ -60,8 +60,8 @@ export class TaskModel {
    *
    * @return serialized Task
    */
-  static toResponse(task: ITaskData) {
-    const { id = null, title = null, order = null, description = null, userId = null, boardId = null, columnId = null } = task;
+  static toResponse(task: ITaskData): Partial<ITaskData> {
+    const { id = undefined, title = undefined, order = undefined, description = undefined, userId = null, boardId = undefined, columnId = undefined } = task;
 
     return { id, title, order, description, userId, boardId, columnId };
   }

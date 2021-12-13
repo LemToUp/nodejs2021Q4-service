@@ -37,7 +37,7 @@ export class BoardModel {
    *
    * @return serialized Board
    */
-  static toResponse(board: IBoardData) {
+  static toResponse(board: IBoardData): Partial<IBoardData> {
     const { id, title, columns } = board;
     return { id, title, columns };
   }
