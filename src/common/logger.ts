@@ -18,12 +18,17 @@ const warningMap: warningType = {
     '4': 'trace',
 }
 
-const loggingLevel = process.env.LOGGING_LEVEL as keyof warningType;
+const loggingLevel = warningMap[process.env.LOGGING_LEVEL as keyof warningType] || 'trace';
 
 const pinoInstance = pino({
-    level: warningMap[loggingLevel] || 'trace',
+    level: loggingLevel,
     transport: {
         targets: [
+            {
+                level: 'trace',
+                target: 'pino-pretty',
+                options: {},
+            },
             {
                 level: 'trace',
                 target: 'pino/file',
