@@ -1,5 +1,6 @@
 import pino from "pino";
-import path from "path";
+
+import path = require('path')
 
 require('dotenv').config();
 
