@@ -32,8 +32,9 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
+      PGDATA: /var/lib/postgresql/data
     volumes:
-      - ./docker/postgres/data:/var/lib/postgresql
+      - pgdata:/var/lib/postgresql/data
       - ./docker/postgres/logs:/logs
     ports:
       - "5432:5432"
@@ -43,3 +44,7 @@ services:
 networks:
   nodejs2021Q4:
     driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
