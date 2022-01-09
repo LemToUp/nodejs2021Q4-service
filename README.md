@@ -1,5 +1,28 @@
 # RS School REST service
 
+## Docker
+
+#### Build from the root folder:
+
+```sh
+docker-compose build
+```
+
+#### Run:
+
+```sh
+docker-compose up
+```
+
+#### open: [localhost:4000](http://localhost:4000)
+(.env file contains ```PORT=4000``` and ```ADDRESS=0.0.0.0``` ( inner docker ip address for the listening, tested on the windows, might be different on other os))
+
+#### Stop:
+
+```sh
+docker-compose stop
+```
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
