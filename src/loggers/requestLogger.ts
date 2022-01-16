@@ -1,5 +1,5 @@
-import {FastifyInstance} from "fastify";
-import logger from "../common/logger";
+import {FastifyInstance} from 'fastify';
+import logger from '../common/logger';
 
 export const requestLogger = (fastifyInstance: FastifyInstance) => {
     fastifyInstance.addHook('onResponse', (req, reply, done) => {

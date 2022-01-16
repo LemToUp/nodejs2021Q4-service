@@ -1,4 +1,4 @@
-import logger from "../common/logger";
+import logger from '../common/logger';
 
 export const unhandledRejectionLogger = () => {
     process.on('unhandledRejection', (reason) => {
