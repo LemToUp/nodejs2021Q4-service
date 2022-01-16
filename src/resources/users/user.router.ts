@@ -1,7 +1,7 @@
-import {FastifyPluginAsync, FastifyReply, FastifyRequest} from "fastify";
-import {UserModel} from "./user.model";
-import { response } from "../../common/response";
-import * as usersService from "./user.service";
+import {FastifyPluginAsync, FastifyReply, FastifyRequest} from 'fastify';
+import {UserModel} from './user.model';
+import { response } from '../../common/response';
+import { UserService } from './user.service';
 
 /**
  * @description Users CRUD routes
@@ -14,6 +14,7 @@ import * as usersService from "./user.service";
  * @remarks DELETE /:userId - delete
  */
 export const userRoute:FastifyPluginAsync = async (fastify) => {
+  const userService = new UserService();
   /**
    * @description Get Users list
    * @param req FastifyRequest
@@ -22,7 +23,7 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response array of UserModels
    */
   fastify.get('/', async (req: FastifyRequest, res: FastifyReply) => {
-    const users = await usersService.getAll();
+    const users = await userService.getAll();
     // map user fields to exclude secret fields like "password"
     return response(res, users.map(UserModel.toResponse));
   })
@@ -31,7 +32,7 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    * @param req FastifyRequest
    * @param res FastifyReply
    *
-   * @return Response UserModel | 404
+   * @return Response User | 404
    */
   fastify.get('/:userId', {
     schema: {
@@ -41,7 +42,7 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { userId } = req.params as { userId: string };
-    const user = await usersService.get(userId);
+    const user = await userService.get(userId);
     // map user fields to exclude secret fields like "password"
     return user ? response(res, UserModel.toResponse(user)) : response(res,'User not found', 404);
   })
@@ -50,11 +51,11 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    * @param req FastifyRequest
    * @param res FastifyReply
    *
-   * @return Response created UserModel
+   * @return Response created User
    */
   fastify.post('/', async (req, res) => {
-    const { name, login, pass } = req.body as { name: string, login: string, pass: string };
-    const user = await usersService.create(name, login, pass);
+    const { name, login, password } = req.body as { name: string, login: string, password: string };
+    const user = await userService.create(name, login, password);
 
     return response(res, UserModel.toResponse(user), 201);
   })
@@ -63,7 +64,7 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    * @param req FastifyRequest
    * @param res FastifyReply
    *
-   * @return Response updated UserModel
+   * @return Response updated User
    */
   fastify.put('/:userId', {
     schema: {
@@ -74,7 +75,9 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
   }, async (req, res) => {
     const { userId } = req.params as { userId: string };
     const { name, login, pass } = req.body as { name: string | undefined, login: string | undefined, pass: string | undefined };
-    const user = await usersService.update(userId, name, login, pass);
+    await userService.update(userId, name, login, pass);
+
+    const user = await userService.get(userId);
 
     return response(res, user ? UserModel.toResponse(user) : 'Not found', user ? 200 : 404);
   })
@@ -83,7 +86,7 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    * @param req FastifyRequest
    * @param res FastifyReply
    *
-   * @return Response deleted UserModel
+   * @return Response deleted User
    */
   fastify.delete('/:userId', {
     schema: {
@@ -93,7 +96,12 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { userId } = req.params as { userId: string };
-    const user = await usersService.remove(userId);
+    const user = await userService.get(userId);
+
+    if (user) {
+      await userService.remove(userId);
+    }
+
     // map user fields to exclude secret fields like "password"
     return user ? response(res, UserModel.toResponse(user)) : response(res,'User not found', 404);
   })
