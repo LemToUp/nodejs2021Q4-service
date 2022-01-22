@@ -1,0 +1,47 @@
+version: "3.7"
+services:
+  node:
+    image: lemtoup/2021q4-node:2021q4-node
+    container_name: 2021q4-node
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      HOSTNAME: ${HOSTNAME}
+    volumes:
+      - ./src:/app/src
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    networks:
+      - nodejs2021Q4
+    ports:
+      - "4000:4000"
+    depends_on:
+      - "db"
+  db:
+    build:
+      context: .
+      dockerfile: docker/postgres/Dockerfile
+    image: 2021q4-postgres
+    restart: unless-stopped
+    command: postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/logs
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/logs:/logs
+    ports:
+      - "5432:5432"
+    networks:
+      - nodejs2021Q4
+
+networks:
+  nodejs2021Q4:
+    driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
