@@ -22,7 +22,9 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
    *
    * @return Response array of BoardModels
    */
-  fastify.get('/', async (req, res) => {
+  fastify.get('/', {
+    preValidation: [ fastify.authenticate ]
+  }, async (req, res) => {
     const boards = await boardService.getAll();
     // map board fields to exclude secret fields like "password"
     return response(res, boards.map(BoardModel.toResponse));
@@ -35,6 +37,7 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response BoardModel | 404
    */
   fastify.get('/:boardId', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         boardId: { type: 'string' },
@@ -53,7 +56,9 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
    *
    * @return Response created BoardModel
    */
-  fastify.post('/', async (req, res) => {
+  fastify.post('/', {
+    preValidation: [ fastify.authenticate ]
+  }, async (req, res) => {
     const { title, columns } = req.body as { title: string, columns: Array<{ title: string, order: number}> };
     const board = await boardService.create(title, columns);
 
@@ -67,6 +72,7 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response updated BoardModel
    */
   fastify.put('/:boardId', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         boardId: { type: 'string' },
@@ -94,6 +100,7 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response deleted BoardModel
    */
   fastify.delete('/:boardId', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         boardId: { type: 'string' },

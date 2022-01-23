@@ -22,7 +22,9 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    *
    * @return Response array of UserModels
    */
-  fastify.get('/', async (req: FastifyRequest, res: FastifyReply) => {
+  fastify.get('/', {
+    preValidation: [ fastify.authenticate ]
+  }, async (req: FastifyRequest, res: FastifyReply) => {
     const users = await userService.getAll();
     // map user fields to exclude secret fields like "password"
     return response(res, users.map(UserModel.toResponse));
@@ -35,6 +37,7 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response User | 404
    */
   fastify.get('/:userId', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         userId: { type: 'string' },
@@ -53,7 +56,9 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    *
    * @return Response created User
    */
-  fastify.post('/', async (req, res) => {
+  fastify.post('/', {
+    preValidation: [ fastify.authenticate ]
+  }, async (req, res) => {
     const { name, login, password } = req.body as { name: string, login: string, password: string };
     const user = await userService.create(name, login, password);
 
@@ -67,6 +72,7 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response updated User
    */
   fastify.put('/:userId', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         userId: { type: 'string' },
@@ -89,6 +95,7 @@ export const userRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response deleted User
    */
   fastify.delete('/:userId', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         userId: { type: 'string' },

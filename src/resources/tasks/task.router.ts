@@ -22,6 +22,7 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response array of TaskModels
    */
   fastify.get('/', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         boardId: { type: 'string' },
@@ -41,6 +42,7 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response TaskModel | 404
    */
   fastify.get('/:taskId', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         taskId: { type: 'string' },
@@ -60,6 +62,7 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response created TaskModel
    */
   fastify.post('/', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         boardId: { type: 'string' },
@@ -80,6 +83,7 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response updated TaskModel
    */
   fastify.put('/:taskId', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         taskId: { type: 'string' },
@@ -101,6 +105,7 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response deleted TaskModel
    */
   fastify.delete('/:taskId', {
+    preValidation: [ fastify.authenticate ],
     schema: {
       querystring: {
         taskId: { type: 'string' },
