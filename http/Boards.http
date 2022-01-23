@@ -1,4 +1,5 @@
 POST http://localhost:4000/boards
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/
@@ -25,6 +26,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ###
 
 GET http://localhost:4000/boards
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/
@@ -40,6 +42,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 
 
 GET http://localhost:4000/boards/{{boardId}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/
@@ -54,6 +57,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ###
 
 PUT http://localhost:4000/boards/{{boardId}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/
@@ -71,6 +75,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ###
 
 DELETE http://localhost:4000/boards/{{boardId}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/
@@ -83,4 +88,7 @@ Sec-Fetch-Site: same-site
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36
 
 ###
+
+GET http://localhost:4000
+Content-Type: application/json
 
