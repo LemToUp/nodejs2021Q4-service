@@ -1,11 +1,12 @@
-import fastify, {FastifyReply, FastifyRequest} from 'fastify';
+import fastify from 'fastify';
 import fastifyJwt from 'fastify-jwt';
 import { userRoute } from './resources/users/user.router';
 import { taskRoute } from './resources/tasks/task.router';
 import { boardRoute } from './resources/boards/board.router';
 import { loginRoute } from './resources/login/login.router'
 import loggerHandler from './loggers/handler';
-import {getConnection} from './database/db';
+import { getConnection } from './database/db';
+import { jwtAuth } from './common/jwt';
 
 require('dotenv').config();
 
@@ -15,13 +16,7 @@ fastifyInstance.register(fastifyJwt, {
     secret: process.env.SECRET as string
 })
 
-fastifyInstance.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-        await request.jwtVerify()
-    } catch (err) {
-        reply.send(err)
-    }
-})
+fastifyInstance.decorate('authenticate', jwtAuth)
 
 fastifyInstance.register(userRoute, { prefix: '/users'});
 fastifyInstance.register(boardRoute, { prefix: '/boards'});
