@@ -1,14 +1,30 @@
-import { initializeApp } from './app';
+import { NestFactory } from '@nestjs/core';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import fmp from 'fastify-multipart';
+import { AppModule } from './app.module';
+import { LoggerService } from './loggers/logger.service.';
+import { unhandledRejectionLogger } from './loggers/unhandledRejectionLogger';
+import { uncaughtExceptionLogger } from './loggers/uncaughtExceptionLogger';
+
 
 require('dotenv').config();
 
-const { PORT, ADDRESS }: { PORT: number, ADDRESS: string } = require('./common/config');
+const { PORT, ADDRESS } = require('./common/config');
 
-(async () => {
-    const app = await initializeApp();
+async function bootstrap() {
+    const app = await NestFactory.create<NestFastifyApplication>(
+        AppModule,
+        new FastifyAdapter(),
+        { bufferLogs: true },
+    );
 
-    app.listen(PORT || 4000, ADDRESS).catch((err: Error) => {
-        app.log.error(err);
-        process.exit(1);
-    })
-})();
+    app.useLogger(new LoggerService());
+    await app.register(fmp);
+
+    unhandledRejectionLogger();
+    uncaughtExceptionLogger();
+
+    await app.listen(PORT, ADDRESS)
+}
+
+bootstrap();
