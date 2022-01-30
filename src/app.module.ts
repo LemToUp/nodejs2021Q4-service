@@ -7,10 +7,17 @@ import { BoardModule } from './resources/boards/board.module';
 import { AuthModule } from './resources/auth/auth.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { LoggerModule } from './loggers/logger.module';
-import { FileModule } from './resources/file/file.module';
 
 @Module({
-    imports: [ DbModule, UserModule, TaskModule, ColumnModule, BoardModule, AuthModule, LoggerModule, FileModule ],
+    imports: [
+        DbModule,
+        UserModule,
+        TaskModule,
+        ColumnModule,
+        BoardModule,
+        AuthModule,
+        LoggerModule,
+    ],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer): void {
