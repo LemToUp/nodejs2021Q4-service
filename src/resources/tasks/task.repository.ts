@@ -1,6 +1,8 @@
-import {EntityRepository, Repository} from 'typeorm';
-import {TaskModel} from './task.model';
+import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { TaskModel } from './task.model';
 
+@Injectable()
 @EntityRepository(TaskModel)
 export class TaskRepository extends Repository<TaskModel> {
   getAll() {
@@ -12,6 +14,6 @@ export class TaskRepository extends Repository<TaskModel> {
   }
 
   getByBoardId(boardId: string) {
-    return this.findOne({ where: { boardId }});
+    return this.findOne({ where: { boardId } });
   }
 }

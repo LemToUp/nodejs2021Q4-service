@@ -1,18 +1,20 @@
-import {getCustomRepository} from 'typeorm';
-import {TaskRepository} from './task.repository';
-import {TaskModel} from './task.model';
-import {UserService} from '../users/user.service';
-import {BoardService} from '../boards/board.service';
-import {ColumnService} from '../column/column.service';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { TaskModel } from './task.model';
+import { UserService } from '../users/user.service';
+import { BoardService } from '../boards/board.service';
+import { ColumnService } from '../column/column.service';
 
+@Injectable()
 export class TaskService {
-    taskRepository: TaskRepository = getCustomRepository(TaskRepository);
-
-    userService: UserService = new UserService();
-
-    boardService: BoardService = new BoardService();
-
-    columnService: ColumnService = new ColumnService();
+    constructor(
+        @InjectRepository(TaskModel)
+        private taskRepository: Repository<TaskModel>,
+        private userService: UserService,
+        private boardService: BoardService,
+        private columnService: ColumnService,
+    ) {}
 
     getByBoardId(boardId: string) {
         const board = this.boardService.get(boardId);
