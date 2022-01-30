@@ -34,6 +34,7 @@
       }
     }
   },
+  "ignorePatterns": ["src/database/migrations/*"],
   "extends": [
     "eslint:recommended",
     "plugin:node/recommended",
@@ -47,6 +48,7 @@
     "eslint-plugin-tsdoc"
   ],
   "rules": {
+    "quotes": [ 1, "single" ],
     "import/extensions": "off",
     "linebreak-style": "off",
     "node/no-unsupported-features/es-syntax": "off",
@@ -56,6 +58,12 @@
     "no-redeclare": "off",
     "@typescript-eslint/no-explicit-any": 2,
     "@typescript-eslint/no-var-requires": 0,
-    "@typescript-eslint/no-redeclare": 0
+    "@typescript-eslint/no-redeclare": 0,
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "class-methods-use-this": "off",
+    "no-useless-constructor": "off",
+    "no-empty-function": "off",
+    "object-curly-spacing": ["error", "always"]
   }
 }

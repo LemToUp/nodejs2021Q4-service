@@ -1,58 +1,33 @@
-export type ITaskData = {
-  id?: string,
-  title?: string,
-  order?: string,
-  description?: string,
-  userId?: string | null,
-  boardId?: string,
-  columnId?: string,
-};
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserModel } from '../users/user.model';
+import { BoardModel } from '../boards/board.model';
+import { ColumnModel } from '../column/column.model';
+
 /**
  * @class Task model definition
  */
+@Entity('tasks')
 export class TaskModel {
+  @PrimaryGeneratedColumn('uuid')
   id: string | undefined;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
   title: string | undefined;
 
-  order: string | undefined;
+  @Column({ type: 'integer', nullable: true })
+  order: number | undefined;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
   description: string | undefined;
 
-  userId: string | null |  undefined;
+  @ManyToOne(() => UserModel)
+  user: UserModel |  undefined;
 
-  boardId: string | undefined;
+  @ManyToOne(() => BoardModel)
+  board: BoardModel | undefined;
 
-  columnId: string | undefined;
-
-  /**
-   * @description Task model constructor
-   *
-   * @param id sting
-   * @param title string
-   * @param order string
-   * @param description string
-   * @param userId string
-   * @param boardId string
-   * @param columnId string
-   */
-  constructor({
-    id,
-    title,
-    order,
-    description,
-    userId,
-    boardId,
-    columnId,
-  }: ITaskData = {}) {
-    this.id = id;
-    this.title = title;
-    this.order = order;
-    this.description = description;
-    this.userId = userId;
-    this.boardId = boardId;
-    this.columnId = columnId;
-  }
+  @ManyToOne(() => ColumnModel)
+  column: ColumnModel | undefined;
 
   /**
    * @description Serialize Task to the response data
@@ -60,9 +35,25 @@ export class TaskModel {
    *
    * @return serialized Task
    */
-  static toResponse(task: ITaskData): Partial<ITaskData> {
-    const { id = undefined, title = undefined, order = undefined, description = undefined, userId = null, boardId = undefined, columnId = undefined } = task;
+  static toResponse(task: TaskModel) {
+    const {
+      id = undefined,
+      title = undefined,
+      order = undefined,
+      description = undefined,
+      user = null,
+      board = null,
+      column = null
+    } = task;
 
-    return { id, title, order, description, userId, boardId, columnId };
+    return {
+      id,
+      title,
+      order,
+      description,
+      userId: user?.id || null,
+      boardId: board?.id || null,
+      columnId: column?.id || null
+    };
   }
 }

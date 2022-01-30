@@ -1,34 +1,29 @@
-export type IBoardData = {
-  id?: string,
-  title?: string,
-  columns?: string,
-};
-
+import {AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {ColumnModel} from '../column/column.model';
 
 /**
  * @class Board model definition
  */
+@Entity('boards')
 export class BoardModel {
+  @PrimaryGeneratedColumn('uuid')
   id: string | undefined;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
   title: string | undefined;
 
-  columns: string | undefined;
+  @OneToMany(() => ColumnModel, column => column.board, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate:'CASCADE',
+  })
+  columns: Array<ColumnModel> | undefined;
 
-  /**
-   * @description Board model constructor
-   * @param id sting
-   * @param title string
-   * @param columns string
-   */
-  constructor({
-    id,
-    title,
-    columns
-  }: IBoardData = {}) {
-    this.id = id;
-    this.title = title;
-    this.columns = columns;
+  @AfterLoad()
+  sortAttributes() {
+    if (this?.columns?.length) {
+      this.columns.sort((a, b) => ((a.order || 0) - (b.order || 0)));
+    }
   }
 
   /**
@@ -37,8 +32,9 @@ export class BoardModel {
    *
    * @return serialized Board
    */
-  static toResponse(board: IBoardData): Partial<IBoardData> {
+  static toResponse(board: BoardModel): Partial<BoardModel> {
     const { id, title, columns } = board;
+
     return { id, title, columns };
   }
 }

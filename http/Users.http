@@ -1,4 +1,5 @@
 POST http://localhost:4000/users
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/
@@ -12,8 +13,8 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 
 {
   "name": "user",
-  "login": "login",
-  "password": "password"
+  "login": "admin",
+  "password": "admin"
 }
 
 > {%
@@ -23,6 +24,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ###
 
 GET http://localhost:4000/users
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/
@@ -38,6 +40,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 
 
 GET http://localhost:4000/users/{{userId}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/
@@ -52,6 +55,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ###
 
 PUT http://localhost:4000/users/{{userId}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/
@@ -69,6 +73,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ###
 
 DELETE http://localhost:4000/users/{{userId}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Origin: {{host}}
 Referer: {{host}}/

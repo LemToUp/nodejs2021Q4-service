@@ -1,5 +1,42 @@
 # RS School REST service
 
+## Docker
+
+#### Build from the root folder:
+
+```sh
+docker-compose build
+```
+
+#### Run:
+
+```sh
+docker-compose up
+```
+
+#### open: [localhost:4000](http://localhost:4000)
+(.env file contains ```PORT=4000``` and ```ADDRESS=0.0.0.0``` ( inner docker ip address for the listening, tested on the windows, might be different on other os))
+
+#### Stop:
+
+```sh
+docker-compose stop
+```
+
+
+### Migrations:
+
+apply:
+```shell
+npm run migrate:up
+```
+
+on the docker it should apply automatically, but if it doesn't:
+```shell
+docker exec -d 2021q4-node npm run migrate:up
+```
+
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
