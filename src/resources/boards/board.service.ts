@@ -1,11 +1,16 @@
-import {getCustomRepository} from 'typeorm';
-import {BoardRepository} from './board.repository';
-import {BoardModel} from './board.model';
-import {ColumnModel} from '../column/column.model';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BoardModel } from './board.model';
+import { ColumnModel } from '../column/column.model';
 
-
+@Injectable()
 export class BoardService {
-    boardRepository: BoardRepository = getCustomRepository(BoardRepository);
+    constructor(
+        @InjectRepository(BoardModel)
+        private boardRepository: Repository<BoardModel>
+    ) {}
+
 
     /**
      * @description Get all Boards
@@ -13,7 +18,7 @@ export class BoardService {
      * @return Promise list of the Boards
      */
     getAll() {
-        return this.boardRepository.find({ relations: ['columns']})
+        return this.boardRepository.find({ relations: ['columns'] })
     };
 
     /**
