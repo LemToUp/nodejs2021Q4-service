@@ -1,11 +1,14 @@
-import { server } from "./app";
+import { initializeApp } from './app';
 
 require('dotenv').config();
 
 const { PORT, ADDRESS }: { PORT: number, ADDRESS: string } = require('./common/config');
 
+(async () => {
+    const app = await initializeApp();
 
-server.listen(PORT || 4000, ADDRESS).catch((err: Error) => {
-    server.log.error(err);
-    process.exit(1);
-})
+    app.listen(PORT || 4000, ADDRESS).catch((err: Error) => {
+        app.log.error(err);
+        process.exit(1);
+    })
+})();

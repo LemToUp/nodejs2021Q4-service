@@ -1,32 +1,20 @@
-export type IColumnData = {
-  id?: string,
-  title?: string,
-  order?: string,
-};
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {BoardModel} from '../boards/board.model';
 
 /**
  * @class Column model definition
  */
+@Entity('columns')
 export class ColumnModel {
+  @PrimaryGeneratedColumn('uuid')
   id: string | undefined;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
   title: string | undefined;
 
-  order: string | undefined;
+  @Column({ type: 'integer', nullable: true })
+  order: number | undefined;
 
-  /**
-   * @description Column model constructor
-   * @param id sting
-   * @param title string
-   * @param order string
-   */
-  constructor({
-    id,
-    title,
-    order,
-  }: IColumnData = {}) {
-    this.id = id;
-    this.title = title;
-    this.order = order;
-  }
+  @ManyToOne(() => BoardModel, board => board.columns)
+  board: BoardModel | undefined;
 }

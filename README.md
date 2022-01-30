@@ -23,6 +23,20 @@ docker-compose up
 docker-compose stop
 ```
 
+
+### Migrations:
+
+apply:
+```shell
+npm run migrate:up
+```
+
+on the docker it should apply automatically, but if it doesn't:
+```shell
+docker exec -d 2021q4-node npm run migrate:up
+```
+
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).

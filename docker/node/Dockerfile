@@ -18,4 +18,5 @@ COPY --chown=node:node .eslintrc.json .
 COPY --chown=node:node tsconfig.json .
 
 EXPOSE 4000
-CMD ["npm", "run", "start"]
+
+CMD ["npm", "run", "docker:run"]

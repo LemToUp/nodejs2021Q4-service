@@ -1,7 +1,7 @@
-import {FastifyPluginAsync} from "fastify";
-import { response } from "../../common/response";
-import { TaskModel } from "./task.model";
-import * as tasksService from './task.service';
+import { FastifyPluginAsync } from 'fastify';
+import { response } from '../../common/response';
+import { TaskModel } from './task.model';
+import {TaskService} from './task.service';
 /**
  * @description Tasks CRUD routes
  * @param fastify FastifyInstance
@@ -13,6 +13,7 @@ import * as tasksService from './task.service';
  * @remarks DELETE /:taskId - delete
  */
 export const taskRoute:FastifyPluginAsync = async (fastify) => {
+  const taskService = new TaskService();
   /**
    * @description Get Tasks list
    * @param req FastifyRequest
@@ -28,7 +29,7 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { boardId } = req.params as { boardId: string };
-    const tasks = await tasksService.getByBoardId(boardId);
+    const tasks = await taskService.getByBoardId(boardId);
     // map task fields to exclude secret fields like "password"
     return response(res, tasks.map(TaskModel.toResponse));
   })
@@ -47,7 +48,7 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { taskId } = req.params as { taskId: string };
-    const task = await tasksService.get(taskId);
+    const task = await taskService.get(taskId);
     // map task fields to exclude secret fields like "password"
     return task ? response(res, TaskModel.toResponse(task)) : response(res,'Task not found', 404);
   })
@@ -66,10 +67,10 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { boardId } = req.params as { boardId: string };
-    const { title, order, description, userId, columnId } = req.body as { title: string, order: string, description: string, userId: string, columnId: string };
-    const task = await tasksService.create(title, order, description, userId, boardId, columnId);
+    const { title, order, description, userId, columnId } = req.body as { title: string, order: number, description: string, userId: string, columnId: string };
+    const task = await taskService.create(title, order, description, userId, boardId, columnId);
 
-    return response(res, TaskModel.toResponse(task), 201);
+    return task ? response(res, TaskModel.toResponse(task), 201) : response(res,'Task not created', 400);
   })
   /**
    * @description Update Task by id
@@ -87,8 +88,8 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { taskId } = req.params as { taskId: string };
-    const { title, order, description, userId, boardId, columnId } = req.body as { title: string, order: string, description: string, userId: string, boardId: string, columnId: string };
-    const task = await tasksService.updateById(taskId, title, order, description, userId, boardId, columnId);
+    const { title, order, description, userId, boardId, columnId } = req.body as { title: string, order: number, description: string, userId: string, boardId: string, columnId: string };
+    const task = await taskService.updateById(taskId, title, order, description, userId, boardId, columnId);
 
     return response(res, task ? TaskModel.toResponse(task) : 'Not found', task ? 200 : 404);
   })
@@ -108,7 +109,7 @@ export const taskRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { taskId } = req.params as { taskId: string };
-    const task = await tasksService.remove(taskId);
+    const task = await taskService.remove(taskId);
     // map task fields to exclude secret fields like "password"
     return task ? response(res, TaskModel.toResponse(task)) : response(res,'Task not found', 404);
   })

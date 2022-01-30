@@ -1,7 +1,7 @@
-import {FastifyPluginAsync} from "fastify";
-import { response } from "../../common/response";
-import { BoardModel } from "./board.model";
-import * as boardsService from './board.service';
+import {FastifyPluginAsync} from 'fastify';
+import { response } from '../../common/response';
+import { BoardModel } from './board.model';
+import { BoardService } from './board.service';
 
 /**
  * @description Boards CRUD routes
@@ -14,6 +14,7 @@ import * as boardsService from './board.service';
  * @remarks DELETE /:boardId - delete
  */
 export const boardRoute:FastifyPluginAsync = async (fastify) => {
+  const boardService = new BoardService();
   /**
    * @description Get Boards list
    * @param req FastifyRequest
@@ -22,7 +23,7 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response array of BoardModels
    */
   fastify.get('/', async (req, res) => {
-    const boards = await boardsService.getAll();
+    const boards = await boardService.getAll();
     // map board fields to exclude secret fields like "password"
     return response(res, boards.map(BoardModel.toResponse));
   })
@@ -41,7 +42,7 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { boardId } = req.params as { boardId: string };
-    const board = await boardsService.get(boardId);
+    const board = await boardService.get(boardId, ['columns']);
     // map board fields to exclude secret fields like "password"
     return board ? response(res, BoardModel.toResponse(board)) : response(res,'Board not found', 404);
   })
@@ -53,8 +54,8 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
    * @return Response created BoardModel
    */
   fastify.post('/', async (req, res) => {
-    const { title, columns } = req.body as { title: string, columns: string };
-    const board = await boardsService.create(title, columns);
+    const { title, columns } = req.body as { title: string, columns: Array<{ title: string, order: number}> };
+    const board = await boardService.create(title, columns);
 
     return response(res, BoardModel.toResponse(board), 201);
   })
@@ -73,10 +74,17 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { boardId } = req.params as { boardId: string };
-    const { title, columns } = req.body as { title: string, columns: string };
-    const board = await boardsService.update(boardId, title, columns);
+    const { title } = req.body as { title: string };
 
-    return response(res, board ? BoardModel.toResponse(board) : 'Not found', board ? 200 : 404);
+    let boardModel = await boardService.get(boardId);
+
+    if (boardModel) {
+      await boardService.update(boardId, title);
+
+      boardModel = await boardService.get(boardId);
+    }
+
+    return response(res, boardModel ? BoardModel.toResponse(boardModel) : 'Not found', boardModel ? 200 : 404);
   })
   /**
    * @description Delete Board by id
@@ -93,7 +101,7 @@ export const boardRoute:FastifyPluginAsync = async (fastify) => {
     }
   }, async (req, res) => {
     const { boardId } = req.params as { boardId: string };
-    const board = await boardsService.remove(boardId);
+    const board = await boardService.remove(boardId);
     // map board fields to exclude secret fields like "password"
     return board ? response(res, BoardModel.toResponse(board)) : response(res,'Board not found', 404);
   })

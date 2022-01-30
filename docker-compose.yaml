@@ -1,7 +1,10 @@
 version: "3.7"
 services:
   node:
-    image: lemtoup/2021q4-node:2021q4-node
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    image: 2021q4-node
     container_name: 2021q4-node
     restart: unless-stopped
     environment:

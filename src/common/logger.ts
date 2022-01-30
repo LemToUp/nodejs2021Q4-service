@@ -1,4 +1,4 @@
-import pino from "pino";
+import pino from 'pino';
 
 import path = require('path')
 
@@ -25,11 +25,11 @@ const pinoInstance = pino({
     level: loggingLevel,
     transport: {
         targets: [
-            {
-                level: 'trace',
-                target: 'pino-pretty',
-                options: {},
-            },
+            // {
+            //     level: 'trace',
+            //     target: 'pino-pretty',
+            //     options: {},
+            // },
             {
                 level: 'trace',
                 target: 'pino/file',

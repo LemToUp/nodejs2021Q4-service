@@ -1,34 +1,28 @@
-export type IUserData = { id?: string, name?: string, login?: string, password?: string };
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {TaskModel} from '../tasks/task.model';
+
 /**
- * @class User model definition
+ * @class UserModel model definition
  */
+@Entity('users')
 export class UserModel {
+  @PrimaryGeneratedColumn('uuid')
   id: string | undefined;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
   name: string | undefined;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
   login: string | undefined;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
   password: string | undefined;
 
-  /**
-   * @description User model constructor
-   * @param id sting
-   * @param title string
-   * @param login string
-   * @param password string
-   */
-  constructor({
-    id,
-    name,
-    login,
-    password
-  }: IUserData = {}) {
-    this.id = id;
-    this.name = name;
-    this.login = login;
-    this.password = password;
-  }
+  @OneToMany(() => TaskModel, task => task.user, {
+    onDelete: 'SET NULL',
+    cascade: true
+  })
+  tasks: Array<TaskModel> | undefined;
 
   /**
    * @description Serialize User to the response data
@@ -36,8 +30,9 @@ export class UserModel {
    *
    * @return serialized User
    */
-  static toResponse(user: IUserData): Partial<IUserData> {
+  static toResponse(user: UserModel): Partial<UserModel> {
     const { id, name, login } = user;
+
     return { id, name, login };
   }
 }
