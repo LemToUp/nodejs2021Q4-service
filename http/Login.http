@@ -1,0 +1,20 @@
+POST http://localhost:4000/login
+Content-Type: application/json
+Origin: {{host}}
+Referer: {{host}}/
+Accept: application/json
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-site
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36
+
+{
+  "login": "admin",
+  "password": "admin"
+}
+
+> {%
+ client.global.set("token", response.body.token);
+ %}

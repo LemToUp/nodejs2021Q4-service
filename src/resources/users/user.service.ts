@@ -1,4 +1,5 @@
 import { getCustomRepository } from 'typeorm';
+import bcrypt from 'bcryptjs';
 import { UserRepository } from './user.repository';
 import { UserModel } from './user.model';
 
@@ -26,6 +27,10 @@ export class UserService {
         return this.userRepository.get(id);
     }
 
+    getByLogin(login: string) {
+        return this.userRepository.findOne({ where: { login }})
+    }
+
     /**
      * @description Create User
      *
@@ -36,7 +41,7 @@ export class UserService {
 
         userModel.name = name;
         userModel.login = login;
-        userModel.password = password;
+        userModel.password = bcrypt.hashSync(password, 10);
 
         return this.userRepository.save(userModel);
     }
@@ -77,12 +82,6 @@ export class UserService {
      * @return Promise deleted User | bool
      */
     async remove(id: string) {
-        const result = await this.userRepository.delete(id);
-
-        // if (result) {
-        //     await tasksRepo.updateBatch({ userId: id }, { userId: null })
-        // }
-
-        return result
+        return this.userRepository.delete(id);
     }
 }

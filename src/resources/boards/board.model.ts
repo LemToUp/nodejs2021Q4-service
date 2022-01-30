@@ -1,4 +1,4 @@
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {ColumnModel} from '../column/column.model';
 
 /**
@@ -15,9 +15,16 @@ export class BoardModel {
   @OneToMany(() => ColumnModel, column => column.board, {
     cascade: true,
     onDelete: 'CASCADE',
-    onUpdate:'CASCADE'
+    onUpdate:'CASCADE',
   })
   columns: Array<ColumnModel> | undefined;
+
+  @AfterLoad()
+  sortAttributes() {
+    if (this?.columns?.length) {
+      this.columns.sort((a, b) => ((a.order || 0) - (b.order || 0)));
+    }
+  }
 
   /**
    * @description Serialize Board to the response data
