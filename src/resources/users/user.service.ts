@@ -1,11 +1,15 @@
-import { getCustomRepository } from 'typeorm';
 import bcrypt from 'bcryptjs';
-import { UserRepository } from './user.repository';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UserModel } from './user.model';
 
-
+@Injectable()
 export class UserService {
-    userRepository: UserRepository = getCustomRepository(UserRepository);
+    constructor(
+        @InjectRepository(UserModel)
+        private userRepository: Repository<UserModel>
+    ) {}
 
     /**
      * @description Get all Users
@@ -13,7 +17,7 @@ export class UserService {
      * @return Promise list of the Users
      */
     getAll() {
-        return this.userRepository.getAll();
+        return this.userRepository.find();
     }
 
     /**
@@ -24,11 +28,11 @@ export class UserService {
      * @return Promise User | false
      */
     get(id: string) {
-        return this.userRepository.get(id);
+        return this.userRepository.findOne(id);
     }
 
     getByLogin(login: string) {
-        return this.userRepository.findOne({ where: { login }})
+        return this.userRepository.findOne({ where: { login } })
     }
 
     /**
@@ -67,7 +71,7 @@ export class UserService {
             return this.userRepository.update(id, {
                 name: name || userModel.name,
                 login: login || userModel.login,
-                password: password || userModel.password,
+                password: password ? bcrypt.hashSync(password, 10) : userModel.password,
             });
         }
 
