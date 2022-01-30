@@ -1,10 +1,14 @@
-import { getCustomRepository } from 'typeorm';
-import { ColumnRepository } from './column.repository';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { ColumnModel } from './column.model';
 
-
+@Injectable()
 export class ColumnService {
-    columnRepository: ColumnRepository = getCustomRepository(ColumnRepository);
+    constructor(
+        @InjectRepository(ColumnModel)
+        private columnRepository: Repository<ColumnModel>
+    ) {}
 
     /**
      * @description Get all Columns
@@ -12,7 +16,7 @@ export class ColumnService {
      * @return Promise list of the Columns
      */
     getAll() {
-        return this.columnRepository.getAll()
+        return this.columnRepository.find()
     };
 
     /**
@@ -23,7 +27,7 @@ export class ColumnService {
      * @return Promise Column | false
      */
     get(id: string) {
-        return this.columnRepository.get(id)
+        return this.columnRepository.findOne(id)
     };
 
     /**
