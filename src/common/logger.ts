@@ -2,8 +2,6 @@ import pino from 'pino';
 
 import path = require('path')
 
-require('dotenv').config();
-
 type warningType = {
     '0': string,
     '1': string,
@@ -19,17 +17,19 @@ const warningMap: warningType = {
     '4': 'trace',
 }
 
-const loggingLevel = warningMap[process.env.LOGGING_LEVEL as keyof warningType] || 'trace';
+const { LOGGING_LEVEL } = require('./config');
+
+const loggingLevel = warningMap[LOGGING_LEVEL as keyof warningType] || 'trace';
 
 const pinoInstance = pino({
     level: loggingLevel,
     transport: {
         targets: [
-            // {
-            //     level: 'trace',
-            //     target: 'pino-pretty',
-            //     options: {},
-            // },
+            {
+                level: 'trace',
+                target: 'pino-pretty',
+                options: {},
+            },
             {
                 level: 'trace',
                 target: 'pino/file',
@@ -40,7 +40,7 @@ const pinoInstance = pino({
                 target: 'pino/file',
                 options: { destination: path.resolve(__dirname, '../../logs/error.log') },
             }
-        ]}
+        ] }
 });
 
 export default pinoInstance;
